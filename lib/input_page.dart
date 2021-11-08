@@ -1,6 +1,19 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'reuseableCard.dart';
+import 'iconContent.dart';
+import 'constant.dart';
+
+enum Gender { male, female }
+// Example for gender
+// class gender{
+//   Gender mygender;
+//   gender({this.mygender})
+// }
+
+// gender g = new gender(mygender: Gender.male);
 
 class InputPage extends StatefulWidget {
   @override
@@ -8,6 +21,36 @@ class InputPage extends StatefulWidget {
 }
 
 class _InputPageState extends State<InputPage> {
+  Gender selectedGender = Gender.male;
+
+  int height = 120;
+  int weight = 60;
+  // Color maleCardColor = activeCardColor;
+  // Color femaleCardColor = inactiveCardColor;
+  //
+  // //1= male , 0 = female
+  // void updateColor(Gender selectedGender) {
+  //   if (selectedGender == Gender.male) {
+  //     if (maleCardColor == inactiveCardColor) {
+  //       maleCardColor = activeCardColor;
+  //       femaleCardColor = inactiveCardColor;
+  //     } else {
+  //       maleCardColor = activeCardColor;
+  //       // femaleCardColor = inactiveCardColor;
+  //     }
+  //   }
+  //
+  //   if (selectedGender == Gender.female) {
+  //     if (femaleCardColor == inactiveCardColor) {
+  //       femaleCardColor = activeCardColor;
+  //       maleCardColor = inactiveCardColor;
+  //     } else {
+  //       femaleCardColor = activeCardColor;
+  //       // maleCardColor = inactiveCardColor;
+  //     }
+  //   }
+  // }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,50 +66,35 @@ class _InputPageState extends State<InputPage> {
                 children: <Widget>[
                   Expanded(
                       child: ReuseableCard(
-                    colour: Color(0xFF1D1E33),
-                    cardChild: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          FontAwesomeIcons.mars,
-                          size: 80.0,
-                          color: Colors.white,
-                        ),
-                        // SizedBox(
-                        //   height: 5.0,
-                        // ),
-                        Text(
-                          'Male',
-                          style: TextStyle(
-                            fontSize: 18.0,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ],
-                    ),
-                  )),
+                          onPress: () {
+                            setState(() {
+                              // updateColor(Gender.male);
+                              selectedGender = Gender.male;
+                            });
+                          },
+                          // colour: maleCardColor,
+                          colour: selectedGender == Gender.male
+                              ? activeCardColor
+                              : inactiveCardColor,
+                          cardChild: iconContent(
+                            label: 'MALE',
+                            icon: FontAwesomeIcons.mars,
+                          ))),
                   Expanded(
                       child: ReuseableCard(
-                    colour: Color(0xFF1D1E33),
-                    cardChild: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          FontAwesomeIcons.venus,
-                          size: 80.0,
-                          color: Colors.white,
-                        ),
-                        // SizedBox(
-                        //   height: 5.0,
-                        // ),
-                        Text(
-                          'Female',
-                          style: TextStyle(
-                            fontSize: 18.0,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ],
+                    // colour: femaleCardColor,
+                    colour: selectedGender == Gender.female
+                        ? activeCardColor
+                        : inactiveCardColor,
+                    onPress: () {
+                      setState(() {
+                        // updateColor(Gender.female);
+                        selectedGender = Gender.female;
+                      });
+                    },
+                    cardChild: iconContent(
+                      label: 'FEMALE',
+                      icon: FontAwesomeIcons.venus,
                     ),
                   )),
                 ],
@@ -75,6 +103,62 @@ class _InputPageState extends State<InputPage> {
             Expanded(
                 child: ReuseableCard(
               colour: Color(0xFF1D1E33),
+              cardChild: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text(
+                    'Height',
+                    style: TextStyle(
+                      color: Color(0xFF8D8E98),
+                      fontSize: 18.0,
+                    ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.baseline,
+                    textBaseline: TextBaseline.alphabetic,
+                    children: <Widget>[
+                      Text(
+                        height.toString(),
+                        style: TextStyle(
+                          fontSize: 50.0,
+                          fontWeight: FontWeight.w900,
+                        ),
+                      ),
+                      Text(
+                        'cm',
+                        style: TextStyle(
+                          color: Color(0xFF8D8E98),
+                        ),
+                      )
+                    ],
+                  ),
+                  SliderTheme(
+                    data: SliderTheme.of(context).copyWith(
+                        activeTrackColor: Colors.white,
+                        inactiveTrackColor: Color(0xFF8D8E98),
+                        thumbColor: Color(0xFFEB1555),
+                        overlayColor: Color(0x29EB1555),
+                        thumbShape:
+                            RoundSliderThumbShape(enabledThumbRadius: 15.0),
+                        overlayShape:
+                            RoundSliderOverlayShape(overlayRadius: 30.0)),
+                    child: Slider(
+                      // activeColor: Colors.white,
+                      // inactiveColor: Color(0xFF8D8E98),
+                      min: 120.0,
+                      max: 220.0,
+                      onChanged: (double newValue) {
+                        setState(() {
+                          print(newValue);
+                          height = newValue.round();
+                        });
+                      },
+                      value: height.toDouble(),
+                    ),
+                  ),
+                ],
+              ),
             )),
             Expanded(
               child: Row(
@@ -82,6 +166,34 @@ class _InputPageState extends State<InputPage> {
                   Expanded(
                       child: ReuseableCard(
                     colour: Color(0xFF1D1E33),
+                    cardChild: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text(
+                          'WEIGHT',
+                          style: TextStyle(
+                              color: Color(0xFF8D8E98), fontSize: 18.0),
+                        ),
+                        Text(
+                          weight.toString(),
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 40.0,
+                              fontWeight: FontWeight.w900),
+                        ),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            RoundIconButton(icon: FontAwesomeIcons.plus),
+                            SizedBox(
+                              width: 15.0,
+                            ),
+                            RoundIconButton(icon: FontAwesomeIcons.minus)
+                          ],
+                        )
+                      ],
+                    ),
                   )),
                   Expanded(
                       child: ReuseableCard(
@@ -109,22 +221,21 @@ class _InputPageState extends State<InputPage> {
   }
 }
 
-class ReuseableCard extends StatelessWidget {
-  ReuseableCard(
-      {this.cardChild, @required this.colour, this.onPress, this.label});
-
-  final Widget cardChild;
-  final Color colour;
-  final Function() onPress;
-  final String label;
-
+class RoundIconButton extends StatelessWidget {
+  RoundIconButton({this.icon});
+  final IconData icon;
   @override
   Widget build(BuildContext context) {
-    return Container(
-        child: GestureDetector(onTap: onPress, child: cardChild),
-        // color: Colors.purple,
-        margin: EdgeInsets.all(15.0),
-        decoration: BoxDecoration(
-            color: colour, borderRadius: BorderRadius.circular(10.0)));
+    return RawMaterialButton(
+      onPressed: () {},
+      child: Icon(icon),
+      elevation: 6.0,
+      constraints: BoxConstraints.tightFor(width: 56.0, height: 56.0),
+      // shape: CircleBorder(),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      fillColor: Color(0xFF4C4F5E),
+    );
   }
 }
