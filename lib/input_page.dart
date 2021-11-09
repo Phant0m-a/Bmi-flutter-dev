@@ -5,6 +5,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'reuseableCard.dart';
 import 'iconContent.dart';
 import 'constant.dart';
+import 'results_page.dart';
+import 'bmi_brain.dart';
 
 enum Gender { male, female }
 // Example for gender
@@ -25,6 +27,7 @@ class _InputPageState extends State<InputPage> {
 
   int height = 120;
   int weight = 60;
+  int age = 19;
   // Color maleCardColor = activeCardColor;
   // Color femaleCardColor = inactiveCardColor;
   //
@@ -185,11 +188,23 @@ class _InputPageState extends State<InputPage> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
-                            RoundIconButton(icon: FontAwesomeIcons.plus),
+                            RoundIconButton(
+                                icon: FontAwesomeIcons.plus,
+                                onPressed: () {
+                                  setState(() {
+                                    weight++;
+                                  });
+                                }),
                             SizedBox(
                               width: 15.0,
                             ),
-                            RoundIconButton(icon: FontAwesomeIcons.minus)
+                            RoundIconButton(
+                                icon: FontAwesomeIcons.minus,
+                                onPressed: () {
+                                  setState(() {
+                                    weight--;
+                                  });
+                                })
                           ],
                         )
                       ],
@@ -198,21 +213,67 @@ class _InputPageState extends State<InputPage> {
                   Expanded(
                       child: ReuseableCard(
                     colour: Color(0xFF1D1E33),
+                    cardChild: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text(
+                          'AGE',
+                          style: TextStyle(
+                              color: Color(0xFF8D8E98), fontSize: 18.0),
+                        ),
+                        Text(
+                          age.toString(),
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 40.0,
+                              fontWeight: FontWeight.w900),
+                        ),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            RoundIconButton(
+                                icon: FontAwesomeIcons.plus,
+                                onPressed: () {
+                                  setState(() {
+                                    age++;
+                                  });
+                                }),
+                            SizedBox(
+                              width: 15.0,
+                            ),
+                            RoundIconButton(
+                                icon: FontAwesomeIcons.minus,
+                                onPressed: () {
+                                  setState(() {
+                                    age--;
+                                  });
+                                })
+                          ],
+                        )
+                      ],
+                    ),
                   ))
                 ],
               ),
             ),
-            Container(
-              color: Colors.pink,
-              child: Center(
-                child: Text('Calculate',
-                    style: TextStyle(
-                      fontSize: 30.0,
-                    )),
+            GestureDetector(
+              child: bottomButton(
+                title: 'CALCULATE',
+                onTap: () {
+                  BmiBrain calc = new BmiBrain(height: height, weight: weight);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ResultsPage(
+                        calculateBmi: calc.calculateBmi(),
+                        getTip: calc.getTip(),
+                        getResult: calc.getResult(),
+                      ),
+                    ),
+                  );
+                },
               ),
-              width: double.infinity,
-              padding: EdgeInsets.all(20.0),
-              margin: EdgeInsets.only(top: 10.0),
             )
           ],
         ),
@@ -222,12 +283,13 @@ class _InputPageState extends State<InputPage> {
 }
 
 class RoundIconButton extends StatelessWidget {
-  RoundIconButton({this.icon});
+  RoundIconButton({@required this.icon, @required this.onPressed});
   final IconData icon;
+  final Function onPressed;
   @override
   Widget build(BuildContext context) {
     return RawMaterialButton(
-      onPressed: () {},
+      onPressed: onPressed,
       child: Icon(icon),
       elevation: 6.0,
       constraints: BoxConstraints.tightFor(width: 56.0, height: 56.0),

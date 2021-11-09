@@ -17,3 +17,28 @@ class ReuseableCard extends StatelessWidget {
             color: colour, borderRadius: BorderRadius.circular(10.0)));
   }
 }
+
+class bottomButton extends StatelessWidget {
+  const bottomButton({@required this.onTap, this.title});
+  final Function onTap;
+  final String title;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        color: Colors.pink,
+        child: Center(
+          child: Text(title,
+              style: TextStyle(
+                fontSize: 30.0,
+              )),
+        ),
+        width: double.infinity,
+        padding: EdgeInsets.all(20.0),
+        margin: EdgeInsets.only(top: 10.0),
+      ),
+    );
+  }
+}
